@@ -28,7 +28,7 @@ class data_model:
 
     def __init__(self, triplets_file='../DataSets/song_recommender/10000.txt',
                  songs_metadata_file='../DataSets/song_recommender/song_data.csv',
-                 sample_number=1000, test_size=0.20):
+                 sample_number=10000, test_size=0.30):
         self.triplets_file = triplets_file
         self.songs_metadata_file = songs_metadata_file
         # Read song  data
@@ -59,8 +59,8 @@ class data_model:
         self.test_users = self.test_data['user_id'].unique()
         self.test_songs = self.test_data['song_id'].unique()
 
-        print ("song_df len: " + str(len(self.song_df)))
-        print ("song_df_users : song_df_songs: " + str(len(self.df_users)) + " " + str(len(self.df_songs)))
+        # print ("song_df len: " + str(len(self.song_df)))
+        # print ("song_df_users : song_df_songs: " + str(len(self.df_users)) + " " + str(len(self.df_songs)))
 
         print ("train_data len: " + str(len(self.train_data)))
         print ("train_users : train_songs: " + str(len(self.train_users)) + " " + str(len(self.train_songs)))
@@ -104,24 +104,14 @@ class data_model:
                 song_select = self.get_train_user_item_listen_number(self.train_users[i], user_items[j])
 
                 self.data_matrix[i][j] = song_select['listen_count'].sum()
-
-        self.data_matrix = self.data_matrix / np.sum(self.data_matrix, axis=1, keepdims=True)
+        self.data_matrix = 2. / (
+                    1 + np.exp(-1. * (self.data_matrix))) - 1
         print ("orign_train_data.shape" + str(self.data_matrix.shape))
-        train_data, test_data = model_selection.train_test_split(self.data_matrix, test_size=0.20, random_state=0)
-        print ("train_data.shape" + str(train_data.shape))
-        print ("test_data.shape" + str(test_data.shape))
+        # print ("orign_train_data.type" + str(type(self.data_matrix)))
+        # train_data, test_data = model_selection.train_test_split(self.data_matrix, test_size=0.20, random_state=0)
+        # print ("train_data.shape" + str(train_data.shape))
+        # print ("test_data.shape" + str(test_data.shape))
         # print (self.data_matrix)
         # print (self.data_matrix.sum(axis=1))
         # print (len(self.data_matrix.sum(axis=1)))
         print ("-----------------------------------------------------------------")
-
-
-a = data_model()
-a.generate_data_matrix()
-auto = denoising_autoencoder_model(a.data_matrix)
-auto.DAE_model()
-# print (type(a.songs))
-# print (a.songs[0])
-# a.generate_data_matrix()
-# print ("song " + str(a.songs))
-# print ("song " + str(len(a.songs)))

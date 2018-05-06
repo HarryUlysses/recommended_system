@@ -10,9 +10,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-# sns.set_style("whitegrid")
+
 
 class denoising_autoencoder_model:
+    origin_data = None
     train_data = None
     valid_data = None
     test_data = None
@@ -60,11 +61,12 @@ class denoising_autoencoder_model:
     model_path = None
     model_name = None
 
-    def __init__(self, train_data, thresholds=0.8, training_epochs=30, batch_size=10, learning_rate=0.00002,
-                 keep_prob=0.6, l2_reg_rate=0.00001, model_path='./checkpoint_dir', model_name = 'MyModel'):
+    def __init__(self, train_data, thresholds=0.8, training_epochs=30, batch_size=10, learning_rate=0.00005,
+                 keep_prob=0.6, l2_reg_rate=0.001, model_path='./checkpoint_dir', model_name='MyModel'):
         self.model_path = model_path
         self.model_name = model_name
 
+        self.origin_data = train_data
 
         train_test_split = np.random.rand(len(train_data)) < thresholds
         self.test_data = train_data[~train_test_split]
@@ -151,7 +153,7 @@ class denoising_autoencoder_model:
                 print(epoch, " ", tr_c, " ", val_c)
             tf.add_to_collection('decoded', decoded)
             saver = tf.train.Saver()
-            saver.save(session, self.model_path)
+            saver.save(session, self.model_path + '/' + self.model_name)
 
     def rmse(self, prediction, ground_truth):
         prediction = prediction[ground_truth.nonzero()].flatten()
@@ -170,19 +172,24 @@ class denoising_autoencoder_model:
             is_training = graph.get_tensor_by_name("is_training:0")
 
             tr_p = session.run(decoded, feed_dict={X: self.train_data, is_training: False})
-            roc_auc = roc_auc_score(self.train_data, tr_p, average="samples")
-            print("traingData.shape")
-            print(self.train_data.shape)
-            print("tr_pData.shape")
-            print(tr_p.shape)
-            print("Training ROC AUC: ", round(roc_auc, 4))
+            ori_p = session.run(decoded, feed_dict={X: self.origin_data, is_training: False})
+            # roc_auc = roc_auc_score(self.train_data, tr_p, average="samples")
             print("Training RMSE: ", self.rmse(tr_p, self.train_data))
+            assert (self.train_data.shape == tr_p.shape)
+            # print("traingData.shape")
+            # print(self.train_data.shape)
 
             print("train_data: ")
             print(self.train_data)
 
+            # print("tr_pData.shape")
+            # print(tr_p.shape)
+            # print("Training ROC AUC: ", round(roc_auc, 4))
+
             print("tr_pData: ")
             print(tr_p)
+
+        return ori_p
 
             # val_p = session.run(decoded, feed_dict={X: validation_x, is_training: False})
             # roc_auc = roc_auc_score(validation_x, val_p, average="samples")
@@ -219,8 +226,6 @@ class denoising_autoencoder_model:
         cost_function = -tf.reduce_mean(((X * tf.log(decoded)) + ((1 - X) * tf.log(1 - decoded)))) + reg_loss
         optimizer = tf.train.AdamOptimizer(self.learning_rate).minimize(cost_function)
         self.training_DAE_model(X, is_training, optimizer, cost_function, decoded)
-        # self.evaluate_model()
+        # return self.evaluate_model()
 
-# a = np.array([[1,2],[3,4]])
-# b = denoising_autoencoder_model(a,learning_rate=1)
-# print (b.learning_rate)
+

@@ -41,11 +41,11 @@ def get_items_from_ohe(ohe, unique_items):
     return unique_items[np.flatnonzero(ohe)]
 
 
-unique_items = get_unique_items(data)
-onehot_items = np.array(get_onehot_items(data, unique_items))
-
-
-model = denoising_autoencoder_model(onehot_items)
-
-model.evaluate_model()
+# unique_items = get_unique_items(data)
+# onehot_items = np.array(get_onehot_items(data, unique_items))
+#
+# print("type"+str(type(onehot_items)))
+# model = denoising_autoencoder_model(onehot_items)
 # model.DAE_model()
+# model.evaluate_model()
+
