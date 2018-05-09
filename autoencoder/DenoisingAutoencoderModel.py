@@ -174,7 +174,8 @@ class denoising_autoencoder_model:
             tr_p = session.run(decoded, feed_dict={X: self.train_data, is_training: False})
             ori_p = session.run(decoded, feed_dict={X: self.origin_data, is_training: False})
             # roc_auc = roc_auc_score(self.train_data, tr_p, average="samples")
-            print("Training RMSE: ", self.rmse(tr_p, self.train_data))
+            RMSE = self.rmse(tr_p, self.train_data)
+            print("Training RMSE: ", RMSE)
             assert (self.train_data.shape == tr_p.shape)
             # print("traingData.shape")
             # print(self.train_data.shape)
@@ -189,7 +190,7 @@ class denoising_autoencoder_model:
             print("tr_pData: ")
             print(tr_p)
 
-        return ori_p
+        return ori_p, RMSE
 
             # val_p = session.run(decoded, feed_dict={X: validation_x, is_training: False})
             # roc_auc = roc_auc_score(validation_x, val_p, average="samples")

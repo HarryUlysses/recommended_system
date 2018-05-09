@@ -32,14 +32,14 @@ def computeEstimatedRatings(data_model, U, S, Vt):
     return rightTerm
 
 
-data_model = data_model(sample_number=4000, test_size=0.4)
-data_model.generate_data_matrix()
-K = 30
-train_matrix = data_model.data_matrix
-
-urm = csc_matrix(train_matrix, dtype=np.float)
-U, S, Vt = computeSVD(urm, K)
-prediction_matrix = computeEstimatedRatings(data_model, U, S, Vt)
+# data_model = data_model(sample_number=4000, test_size=0.4)
+# data_model.generate_data_matrix()
+# K = 30
+# train_matrix = data_model.data_matrix
+#
+# urm = csc_matrix(train_matrix, dtype=np.float)
+# U, S, Vt = computeSVD(urm, K)
+# prediction_matrix = computeEstimatedRatings(data_model, U, S, Vt)
 # print (prediction_matrix)
 # print (prediction_matrix.shape)
 
@@ -77,11 +77,11 @@ prediction_matrix = computeEstimatedRatings(data_model, U, S, Vt)
 
 
 # 推荐
-training_dict = generate_top_recommendations(data_model, prediction_matrix, top = 50)
-test_dict = get_test_sample_recommendations(data_model)
-
-# 评估
-ism_avg_precision_list, ism_avg_recall_list = calculate_precision_recall(data_model, training_dict, test_dict,top=50)
-print("max_precision:" + str(ism_avg_recall_list[np.array(ism_avg_recall_list).argsort()[-1]]))
-
-plot_precision_recall(ism_avg_precision_list, ism_avg_recall_list, "svd_model")
+# training_dict = generate_top_recommendations(data_model, prediction_matrix, top = 50)
+# test_dict = get_test_sample_recommendations(data_model)
+#
+# # 评估
+# ism_avg_precision_list, ism_avg_recall_list = calculate_precision_recall(data_model, training_dict, test_dict,top=50)
+# print("max_precision:" + str(ism_avg_recall_list[np.array(ism_avg_recall_list).argsort()[-1]]))
+#
+# plot_precision_recall(ism_avg_precision_list, ism_avg_recall_list, "svd_model")

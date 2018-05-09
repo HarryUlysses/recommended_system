@@ -6,6 +6,16 @@ class MyRedis:
     def __init__(self, host='127.0.0.1', port='6379', db=0):
 
         self.redis = redis.Redis(host, port, db)
+    def setRmse(self,key,args):
+        self.redis.set(key,args)
+
+    def getRmse(self,key):
+        value = self.redis.get(key)
+        if value[0] == '(':
+            rmse = float(value[1:-4])
+        else:
+            rmse = float(value)
+        return rmse
 
     def setList(self, key, *args):
         i = 0

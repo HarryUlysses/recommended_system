@@ -59,8 +59,8 @@ class data_model:
         self.test_users = self.test_data['user_id'].unique()
         self.test_songs = self.test_data['song_id'].unique()
 
-        # print ("song_df len: " + str(len(self.song_df)))
-        # print ("song_df_users : song_df_songs: " + str(len(self.df_users)) + " " + str(len(self.df_songs)))
+        print ("song_df len: " + str(len(self.song_df)))
+        print ("song_df_users : song_df_songs: " + str(len(self.df_users)) + " " + str(len(self.df_songs)))
 
         print ("train_data len: " + str(len(self.train_data)))
         print ("train_users : train_songs: " + str(len(self.train_users)) + " " + str(len(self.train_songs)))

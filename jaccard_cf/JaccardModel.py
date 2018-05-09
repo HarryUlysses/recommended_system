@@ -48,13 +48,15 @@ class jaccard_model:
                         users_union = users_i.union(users_j)
 
                         user_cooccurence_matrix[j, i] = float(len(users_intersection)) / float(len(users_union))
+                        # print(user_cooccurence_matrix[j, i])
                     else:
                         user_cooccurence_matrix[j, i] = 0
             user_sim_scores = user_cooccurence_matrix.sum(axis=0) / float(user_cooccurence_matrix.shape[0])
             user_sim_scores = np.array(user_sim_scores).tolist()
             cooccurence.append(user_sim_scores)
         self.concurrence_matrix = np.array(cooccurence)
+        print("concurrence_matrix: ")
+        print(self.concurrence_matrix)
+        print(self.concurrence_matrix.shape)
         return self.concurrence_matrix
-        # print("concurrence_matrix: ")
-        # print(self.concurrence_matrix)
-        # print(self.concurrence_matrix.shape)
+
